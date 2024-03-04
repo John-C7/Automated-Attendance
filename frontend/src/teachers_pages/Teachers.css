@@ -1,0 +1,15 @@
+.TeachersTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.TeachersTable th, .TeachersTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.TeachersTable th {
+    background-color: #f2f2f2;
+}

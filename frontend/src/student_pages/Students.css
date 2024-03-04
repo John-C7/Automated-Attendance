@@ -1,0 +1,23 @@
+
+.passportPhoto {
+    width: 50px; 
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.StudentsTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.StudentsTable th, .StudentsTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.StudentsTable th {
+    background-color: #f2f2f2;
+}

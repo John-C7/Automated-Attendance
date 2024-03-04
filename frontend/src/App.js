@@ -7,11 +7,13 @@ import Teacher from "./teachers_pages/Teachers";
 import AddTeacher from "./teachers_pages/Add";
 import Login from "./admin_pages/login";
 import Admin from "./admin_pages/admin";
+import Attendance from "./student_pages/Attendance";
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
+          <Route path="/attendance" element={<Attendance />} />
           <Route path="/students" element={<Students />} />
           <Route path="/add-student" element={<Add />} />
           <Route path="/update-student" element={<Update />} />
