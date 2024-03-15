@@ -43,8 +43,9 @@ const Add = () => {
   }
 
   return (
-    <div className='form'>
+    <div className='add123'>
       <h1> Add new student</h1>
+      <div className='add'>
       <input type="number" placeholder='id' onChange={handleChange} name="id" />
       <input type="text" placeholder="USN" onChange={handleChange} name="usn" />
       <input type="text" placeholder="First_Name" onChange={handleChange} name="First_Name" />
@@ -52,7 +53,8 @@ const Add = () => {
       <input type="text" placeholder="Course" onChange={handleChange} name="Course" />
       <input type="text" placeholder="Email" onChange={handleChange} name="Email" />
       <input type="file" placeholder="Photo" onChange={handleChange} name="Photo" />
-      <button onClick={handleClick}>Add</button>
+      <button class="addButton" onClick={handleClick}>Add</button>
+      </div>
     </div>
   )
 }

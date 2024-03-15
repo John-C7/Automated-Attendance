@@ -67,4 +67,29 @@ CREATE TABLE `attendance` (
   FOREIGN KEY (`subject_id`) REFERENCES `subject`(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+CREATE TABLE `admin` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
+  `userid` VARCHAR(255) NOT NULL,
+  `password` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`, `userid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO admin (id, name, userid, password) VALUES (1, 'Hello', 'admin123', '123456');
+
+SELECT * FROM ADMIN;
 SELECT * FROM ATTENDANCE;
+SELECT SUBJECT_ID, COUNT(*) AS count FROM attendance WHERE student_usn = '1DT21CS059' GROUP BY SUBJECT_ID;
+
+ALTER TABLE `attendance`
+DROP FOREIGN KEY `attendance_ibfk_1`;
+
+ALTER TABLE `attendance`
+ADD CONSTRAINT `attendance_ibfk_1` FOREIGN KEY (`student_usn`) REFERENCES `students`(`USN`) ON DELETE CASCADE;
+
+ALTER TABLE `attendance`
+DROP FOREIGN KEY `attendance_ibfk_2`;
+
+ALTER TABLE `attendance`
+ADD CONSTRAINT `attendance_ibfk_2` FOREIGN KEY (`subject_id`) REFERENCES `subject`(`id`) ON DELETE CASCADE;
+

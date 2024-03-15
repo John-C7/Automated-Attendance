@@ -107,6 +107,15 @@ app.get("/attendance/:student_usn/:subject_id", (req, res) => {
   });
 });
 
+app.get("/attendance/analytics/:student_usn", (req, res) => {
+  const { student_usn } = req.params;
+  const q = `SELECT SUBJECT_ID, COUNT(*) AS count FROM attendance WHERE student_usn = '${student_usn}' GROUP BY SUBJECT_ID`;
+  db.query(q, (err, data) => {
+    if (err) return res.status(500).json({ error: "Internal Server Error" });
+    return res.json(data);
+  });
+});
+
 app.post("/attendance", (req, res) => {
   const { student_usn, subject_id, date, status } = req.body;
 
@@ -130,6 +139,18 @@ app.post("/attendance", (req, res) => {
       }
       return res.json("Attendance inserted successfully");
     });
+  });
+});
+
+app.delete("/students/:usn", (req, res) => {
+  const { usn } = req.params;
+  const q = "DELETE FROM students WHERE usn = ?";
+  db.query(q, [usn], (err, result) => {
+    if (err) {
+      console.error("Error deleting student details: " + err.stack);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+    return res.json("Student details have been deleted");
   });
 });
 
