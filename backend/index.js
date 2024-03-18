@@ -5,7 +5,14 @@ import bodyParser from "body-parser";
 import multer from "multer";
 import fs from "fs";
 
+import cookieParser from "cookie-parser";
+
 const app = express();
+app.use(express.json());
+app.use(cors());
+
+app.use(cookieParser());
+
 app.use(express.json());
 app.use(cors());
 
@@ -87,15 +94,27 @@ app.post("/admin", (req, res) => {
 
   db.query(q, values, (err, result) => {
     if (err) {
+      console.error("Error during database query:", err);
       res.status(500).json({ message: "Internal server error" });
       return;
     }
     if (result.length > 0) {
-      res.status(200).json(result);
+      res.cookie("admin_id", result[0].id, { httpOnly: true });
+      res.status(200).json(result[0]);
     } else {
       res.status(401).json({ message: "Wrong Username or Password" });
     }
   });
+});
+
+app.get("/auth/check", (req, res) => {
+  const adminId = req.cookies.admin_id;
+  if (adminId) {
+    // User is authenticated
+    res.status(200).json({ isAuthenticated: true });
+  } else {
+    res.status(401).json({ isAuthenticated: false });
+  }
 });
 
 app.get("/attendance/:student_usn/:subject_id", (req, res) => {

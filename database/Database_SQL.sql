@@ -9,6 +9,11 @@ CREATE TABLE `Course` (
 INSERT INTO Course (id, name) VALUES
 (1, 'CSE'),
 (2, 'ISE');
+INSERT INTO Course (id, name) VALUES
+(3, 'ECE'),
+(4, 'CIVIL'),
+(5, 'MECH'),
+(6, 'AIML');
 
 CREATE TABLE `Subject` (
   `id` INT PRIMARY KEY,
@@ -77,6 +82,8 @@ CREATE TABLE `admin` (
 
 INSERT INTO admin (id, name, userid, password) VALUES (1, 'Hello', 'admin123', '123456');
 
+
+SELECT * FROM STUDENTS;
 SELECT * FROM ADMIN;
 SELECT * FROM ATTENDANCE;
 SELECT SUBJECT_ID, COUNT(*) AS count FROM attendance WHERE student_usn = '1DT21CS059' GROUP BY SUBJECT_ID;
