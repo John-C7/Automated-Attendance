@@ -1,21 +1,20 @@
-CREATE DATABASE DBMS12;
-USE DBMS12;
+CREATE DATABASE IF NOT EXISTS DBMS123;
+USE DBMS123;
 
-CREATE TABLE `Course` (
+CREATE TABLE IF NOT EXISTS `Course` (
   `id` INT PRIMARY KEY,
   `name` VARCHAR(255)
 );
 
 INSERT INTO Course (id, name) VALUES
 (1, 'CSE'),
-(2, 'ISE');
-INSERT INTO Course (id, name) VALUES
+(2, 'ISE'),
 (3, 'ECE'),
 (4, 'CIVIL'),
 (5, 'MECH'),
 (6, 'AIML');
 
-CREATE TABLE `Subject` (
+CREATE TABLE IF NOT EXISTS `Subject` (
   `id` INT PRIMARY KEY,
   `name` VARCHAR(255),
   `course_id` INT,
@@ -34,7 +33,7 @@ INSERT INTO Subject (id, name, course_id) VALUES
 (9, 'RM', 2),
 (10, 'C#', 2);
 
-CREATE TABLE `students` (
+CREATE TABLE IF NOT EXISTS `students` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `USN` VARCHAR(45) NOT NULL,
   `First_Name` VARCHAR(45) NOT NULL,
@@ -46,7 +45,7 @@ CREATE TABLE `students` (
   INDEX `idx_usn` (`USN`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `teachers` (
+CREATE TABLE IF NOT EXISTS `teachers` (
   `slno` INT NOT NULL AUTO_INCREMENT,
   `Reg_no` VARCHAR(45) NOT NULL,
   `Firstname` VARCHAR(45) NOT NULL,
@@ -61,7 +60,7 @@ INSERT INTO teachers (slno, Reg_no, Firstname, Lastname, Subjects, Email_id) VAL
 (5, 'Reg_no_2', 'Firstname_2', 'Lastname_2', '3,4', 'email2@example.com'),
 (6, 'Reg_no_3', 'Firstname_3', 'Lastname_3', '5', 'email3@example.com');
 
-CREATE TABLE `attendance` (
+CREATE TABLE IF NOT EXISTS `attendance` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `student_usn` VARCHAR(45) NOT NULL,
   `subject_id` INT NOT NULL,
@@ -69,10 +68,10 @@ CREATE TABLE `attendance` (
   `status` ENUM('present', 'absent') NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`student_usn`) REFERENCES `students`(`USN`),
-  FOREIGN KEY (`subject_id`) REFERENCES `subject`(`id`)
+  FOREIGN KEY (`subject_id`) REFERENCES `Subject`(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `admin` (
+CREATE TABLE IF NOT EXISTS `admin` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
   `userid` VARCHAR(255) NOT NULL,
@@ -81,22 +80,3 @@ CREATE TABLE `admin` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO admin (id, name, userid, password) VALUES (1, 'Hello', 'admin123', '123456');
-
-
-SELECT * FROM STUDENTS;
-SELECT * FROM ADMIN;
-SELECT * FROM ATTENDANCE;
-SELECT SUBJECT_ID, COUNT(*) AS count FROM attendance WHERE student_usn = '1DT21CS059' GROUP BY SUBJECT_ID;
-
-ALTER TABLE `attendance`
-DROP FOREIGN KEY `attendance_ibfk_1`;
-
-ALTER TABLE `attendance`
-ADD CONSTRAINT `attendance_ibfk_1` FOREIGN KEY (`student_usn`) REFERENCES `students`(`USN`) ON DELETE CASCADE;
-
-ALTER TABLE `attendance`
-DROP FOREIGN KEY `attendance_ibfk_2`;
-
-ALTER TABLE `attendance`
-ADD CONSTRAINT `attendance_ibfk_2` FOREIGN KEY (`subject_id`) REFERENCES `subject`(`id`) ON DELETE CASCADE;
-

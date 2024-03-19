@@ -10,11 +10,11 @@ import Login from "./admin_pages/login";
 import Admin from "./admin_pages/admin";
 import Attendance from "./student_pages/Attendance";
 import FaceRecognitionPage from "./student_pages/Attendace2";
-import AttendanceAnalyticsPage from "./student_pages/Analytics";
 import AuthProvider from "./AuthProvider";
 import "./App.css";
 import { NotFound } from "./NotFound";
 import NotAuthorized from "./NotAuthorized";
+import Analytics from "./student_pages/Analytics";
 
 function App() {
   return (
@@ -34,7 +34,7 @@ function App() {
         <Route path="/add-teacher" element={<AddTeacher />} />
         <Route path="/" element={<Login />} />
         <Route path="/admin" element={<Admin />} />
-        <Route path="/analytics" element={<AttendanceAnalyticsPage />} />
+        <Route path="/analytics" element={<Analytics />} />
 
         <Route path="*" element={<NotFound />} />
         <Route path="/NotAuthorized" element={<NotAuthorized />} />

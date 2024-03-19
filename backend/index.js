@@ -21,11 +21,18 @@ const upload = multer({ dest: "uploads/" });
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// const db = mysql.createConnection({
+//   host: "localhost",
+//   user: "root",
+//   password: "123456",
+//   database: "DBMS12",
+// });
+
 const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "123456",
-  database: "DBMS12",
+  host: "your-aws-rds-url",
+  user: "admin",
+  password: "password",
+  databse: "DBMS123",
 });
 
 app.get("/", (req, res) => {
@@ -33,7 +40,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/students", (req, res) => {
-  const q = "SELECT * FROM students";
+  const q = "SELECT * FROM DBMS123.students";
   db.query(q, (err, data) => {
     if (err) return res.json(err);
     return res.json(data);
@@ -42,7 +49,7 @@ app.get("/students", (req, res) => {
 
 app.post("/students", upload.single("Photo"), (req, res) => {
   const q =
-    "INSERT INTO students (`id`,`usn`,`First_Name`,`Last_Name`,`Course`,`Email`,`Photo`) VALUES (?,?,?,?,?,?,?)";
+    "INSERT INTO DBMS123.students (`id`,`usn`,`First_Name`,`Last_Name`,`Course`,`Email`,`Photo`) VALUES (?,?,?,?,?,?,?)";
   const values = [
     req.body.id,
     req.body.usn,
@@ -64,7 +71,7 @@ app.post("/students", upload.single("Photo"), (req, res) => {
 //Teachers Table
 
 app.get("/teachers", (req, res) => {
-  const q = "SELECT * FROM teachers";
+  const q = "SELECT * FROM DBMS123.teachers";
   db.query(q, (err, data) => {
     if (err) return res.json(err);
     return res.json(data);
@@ -73,7 +80,7 @@ app.get("/teachers", (req, res) => {
 
 app.post("/teachers", (req, res) => {
   const q =
-    "INSERT INTO teachers (`slno`,`Reg_no`,`Firstname`,`Lastname`,`Subjects`,`Email_id`) VALUES (?)";
+    "INSERT INTO DBMS123.teachers (`slno`,`Reg_no`,`Firstname`,`Lastname`,`Subjects`,`Email_id`) VALUES (?)";
   const values = [
     req.body.slno,
     req.body.Reg_no,
@@ -89,7 +96,7 @@ app.post("/teachers", (req, res) => {
 });
 
 app.post("/admin", (req, res) => {
-  const q = "SELECT * FROM admin WHERE username = ? AND password = ?";
+  const q = "SELECT * FROM DBMS123.admin WHERE username = ? AND password = ?";
   const values = [req.body.username, req.body.password];
 
   db.query(q, values, (err, result) => {
@@ -119,7 +126,7 @@ app.get("/auth/check", (req, res) => {
 
 app.get("/attendance/:student_usn/:subject_id", (req, res) => {
   const { student_usn, subject_id } = req.params;
-  const q = `SELECT * FROM attendance WHERE student_usn = '${student_usn}' AND subject_id = '${subject_id}'`;
+  const q = `SELECT * FROM DBMS123.attendance WHERE student_usn = '${student_usn}' AND subject_id = '${subject_id}'`;
   db.query(q, (err, data) => {
     if (err) return res.status(500).json({ error: "Internal Server Error" });
     return res.json(data);
@@ -128,7 +135,7 @@ app.get("/attendance/:student_usn/:subject_id", (req, res) => {
 
 app.get("/attendance/analytics/:student_usn", (req, res) => {
   const { student_usn } = req.params;
-  const q = `SELECT SUBJECT_ID, COUNT(*) AS count FROM attendance WHERE student_usn = '${student_usn}' GROUP BY SUBJECT_ID`;
+  const q = `SELECT SUBJECT_ID, COUNT(*) AS count FROM DBMS123.attendance WHERE student_usn = '${student_usn}' GROUP BY SUBJECT_ID`;
   db.query(q, (err, data) => {
     if (err) return res.status(500).json({ error: "Internal Server Error" });
     return res.json(data);
@@ -138,7 +145,7 @@ app.get("/attendance/analytics/:student_usn", (req, res) => {
 app.post("/attendance", (req, res) => {
   const { student_usn, subject_id, date, status } = req.body;
 
-  const checkStudentQuery = `SELECT * FROM students WHERE USN = ?`;
+  const checkStudentQuery = `SELECT * FROM DBMS123.students WHERE USN = ?`;
   db.query(checkStudentQuery, [student_usn], (err, studentResult) => {
     if (err) {
       console.error("Error checking student: " + err.stack);
@@ -149,7 +156,7 @@ app.post("/attendance", (req, res) => {
       return res.status(404).json({ error: "Student not found" });
     }
 
-    const insertAttendanceQuery = `INSERT INTO attendance (student_usn, subject_id, date, status) VALUES (?, ?, ?, ?)`;
+    const insertAttendanceQuery = `INSERT INTO DBMS123.attendance (student_usn, subject_id, date, status) VALUES (?, ?, ?, ?)`;
     const values = [student_usn, subject_id, date, status];
     db.query(insertAttendanceQuery, values, (err, result) => {
       if (err) {
@@ -163,7 +170,7 @@ app.post("/attendance", (req, res) => {
 
 app.delete("/students/:usn", (req, res) => {
   const { usn } = req.params;
-  const q = "DELETE FROM students WHERE usn = ?";
+  const q = "DELETE FROM DBMS123.students WHERE usn = ?";
   db.query(q, [usn], (err, result) => {
     if (err) {
       console.error("Error deleting student details: " + err.stack);
@@ -176,3 +183,20 @@ app.delete("/students/:usn", (req, res) => {
 app.listen(8800, () => {
   console.log("Connected to Backend");
 });
+
+// db.query(insertValuesSQL, (err, results, fields) => {
+//   if (err) {
+//     console.error("Error inserting values: " + err.stack);
+//     return;
+//   }
+//   console.log("Values inserted successfully");
+// });
+
+// // Close the connection
+// db.end((err) => {
+//   if (err) {
+//     console.error("Error closing connection: " + err.stack);
+//     return;
+//   }
+//   console.log("Connection closed");
+// });

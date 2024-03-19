@@ -31,7 +31,7 @@ function NavBar() {
         </li>
         <li>
           <Link to="/analytics" className="nav-link">Analytics</Link>
-        </li>
+        </li> 
       </ul>
     </div>
   );

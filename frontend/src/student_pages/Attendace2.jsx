@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import * as faceapi from 'face-api.js';
 import groupPhoto from './Group.jpg';  
-import Student1 from "./Student1.jpg";
-import Student2 from "./Student2.jpg";
+import JohnC from "./Student1.jpg";
+import HarshM from "./Student2.jpg";
 import axios from 'axios';
 
 const FaceRecognitionPage = () => {
@@ -29,8 +29,8 @@ const FaceRecognitionPage = () => {
             const displaySize = { width: image.width, height: image.height };
             faceapi.matchDimensions(canvas, displaySize);
 
-            const refImage1 = await faceapi.fetchImage(Student1);
-            const refImage2 = await faceapi.fetchImage(Student2);
+            const refImage1 = await faceapi.fetchImage(JohnC);
+            const refImage2 = await faceapi.fetchImage(HarshM);
 
             const refAiData1 = await faceapi
                 .detectAllFaces(refImage1)
@@ -57,7 +57,7 @@ const FaceRecognitionPage = () => {
                 const box = detection.box;
                 const drawBox = new faceapi.draw.DrawBox(box, { label: bestMatch.toString() });
                 drawBox.draw(canvas);
-                const label = index === 0 ? 'Student1' : 'Student2'; 
+                const label = index === 0 ? 'HarshM' : 'JohnC'; 
                 const textX = box.x;
                 const textY = box.y - 15; 
                 canvas.getContext('2d').fillStyle = '#ffffff'; 
@@ -78,7 +78,7 @@ const FaceRecognitionPage = () => {
 
     const handleSubmit = async () => {
         if (subjectCode && date) {
-            const usn = subjectCode === 'your_subject_code' ? '1DT21CS004' : '1DT21CS005'; 
+            const usn = subjectCode === 'your_subject_code' ? '1DT21CS049' : '1DT21CS059'; 
             const subjectId = subjectCode;
             const status = 'present'; 
             await axios.post('http://localhost:8800/attendance', { student_usn: usn, subject_id: subjectId, date: date, status: status });
@@ -100,7 +100,7 @@ const FaceRecognitionPage = () => {
                 <label htmlFor="date">Date:</label>
                 <input type="date" id="date" value={date} onChange={handleDateChange} />
                 <button onClick={handleSubmit}>Submit</button>
-                {attendanceAdded && <p>Attendance added for Student-1 and Student-2 on {date} for subject code {subjectCode}</p>}
+                {attendanceAdded && <p>Attendance added for HarshM and JohnC on {date} for subject code {subjectCode}</p>}
             </div>
         </div>
     );
