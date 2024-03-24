@@ -15,6 +15,7 @@ import "./App.css";
 import { NotFound } from "./NotFound";
 import NotAuthorized from "./NotAuthorized";
 import Analytics from "./student_pages/Analytics";
+import StudentsInCourse from "./student_pages/Analytics2";
 
 function App() {
   return (
@@ -35,7 +36,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/analytics" element={<Analytics />} />
-
+        <Route path="/analytics2" element={<StudentsInCourse />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/NotAuthorized" element={<NotAuthorized />} />
       </Routes>

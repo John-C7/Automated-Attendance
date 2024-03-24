@@ -8,31 +8,21 @@ import fs from "fs";
 import cookieParser from "cookie-parser";
 
 const app = express();
+
 app.use(express.json());
 app.use(cors());
-
 app.use(cookieParser());
-
-app.use(express.json());
-app.use(cors());
 
 const upload = multer({ dest: "uploads/" });
 
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// const db = mysql.createConnection({
-//   host: "localhost",
-//   user: "root",
-//   password: "123456",
-//   database: "DBMS12",
-// });
-
 const db = mysql.createConnection({
-  host: "your-aws-rds-url",
-  user: "admin",
-  password: "password",
-  databse: "DBMS123",
+  host: "localhost",
+  user: "root",
+  password: "123456",
+  database: "DBMS123",
 });
 
 app.get("/", (req, res) => {
@@ -96,7 +86,7 @@ app.post("/teachers", (req, res) => {
 });
 
 app.post("/admin", (req, res) => {
-  const q = "SELECT * FROM DBMS123.admin WHERE username = ? AND password = ?";
+  const q = "SELECT * FROM DBMS123.admin WHERE name = ? AND password = ?";
   const values = [req.body.username, req.body.password];
 
   db.query(q, values, (err, result) => {
@@ -133,14 +123,14 @@ app.get("/attendance/:student_usn/:subject_id", (req, res) => {
   });
 });
 
-app.get("/attendance/analytics/:student_usn", (req, res) => {
-  const { student_usn } = req.params;
-  const q = `SELECT SUBJECT_ID, COUNT(*) AS count FROM DBMS123.attendance WHERE student_usn = '${student_usn}' GROUP BY SUBJECT_ID`;
-  db.query(q, (err, data) => {
-    if (err) return res.status(500).json({ error: "Internal Server Error" });
-    return res.json(data);
-  });
-});
+// app.get("/attendance/analytics/:student_usn", (req, res) => {
+//   const { student_usn } = req.params;
+//   const q = `SELECT SUBJECT_ID, COUNT(*) AS count FROM DBMS123.attendance WHERE student_usn = '${student_usn}' GROUP BY SUBJECT_ID`;
+//   db.query(q, (err, data) => {
+//     if (err) return res.status(500).json({ error: "Internal Server Error" });
+//     return res.json(data);
+//   });
+// });
 
 app.post("/attendance", (req, res) => {
   const { student_usn, subject_id, date, status } = req.body;
@@ -180,17 +170,27 @@ app.delete("/students/:usn", (req, res) => {
   });
 });
 
+app.get("/students/:course", (req, res) => {
+  const { course } = req.params;
+  const q = `
+    SELECT COUNT(*) AS numStudents
+    FROM DBMS123.StudentsInCourse
+    WHERE Course = '${course}';
+  `;
+  db.query(q, (err, result) => {
+    if (err) return res.status(500).json({ error: "Internal Server Error" });
+    const numStudents = result[0].numStudents;
+    const q2 = `SELECT * FROM DBMS123.StudentsInCourse WHERE Course = '${course}'`;
+    db.query(q2, (err, data) => {
+      if (err) return res.status(500).json({ error: "Internal Server Error" });
+      return res.json({ students: data, numStudents });
+    });
+  });
+});
+
 app.listen(8800, () => {
   console.log("Connected to Backend");
 });
-
-// db.query(insertValuesSQL, (err, results, fields) => {
-//   if (err) {
-//     console.error("Error inserting values: " + err.stack);
-//     return;
-//   }
-//   console.log("Values inserted successfully");
-// });
 
 // // Close the connection
 // db.end((err) => {

@@ -80,3 +80,8 @@ CREATE TABLE IF NOT EXISTS `admin` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO admin (id, name, userid, password) VALUES (1, 'Hello', 'admin123', '123456');
+
+CREATE VIEW StudentsInCourse AS
+SELECT s.Course, s.USN, s.First_Name, s.Last_Name
+FROM students s
+JOIN Course c ON s.Course = c.name;
