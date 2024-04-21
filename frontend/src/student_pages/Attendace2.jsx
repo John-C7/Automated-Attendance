@@ -1,15 +1,18 @@
-// FaceRecognitionPage.js
 import React, { useState, useEffect } from 'react';
 import * as faceapi from 'face-api.js';
 import groupPhoto from './Group.jpg';  
 import JohnC from "./Student1.jpg";
 import HarshM from "./Student2.jpg";
 import axios from 'axios';
+import Tesseract from 'tesseract.js';
 
+const name1 = "JohnC";
+const name2= "HarshM";
 const FaceRecognitionPage = () => {
     const [subjectCode, setSubjectCode] = useState('');
     const [date, setDate] = useState('');
     const [attendanceAdded, setAttendanceAdded] = useState(false);
+    const [identifiedPersons, setIdentifiedPersons] = useState([]);
 
     useEffect(() => {
         const run = async () => {
@@ -51,22 +54,54 @@ const FaceRecognitionPage = () => {
                 .withFaceLandmarks()
                 .withFaceDescriptors();
 
-            facesAiData.forEach((face, index) => {
-                const { detection, descriptor } = face;
-                const bestMatch = faceMatcher.findBestMatch(descriptor);
-                const box = detection.box;
-                const drawBox = new faceapi.draw.DrawBox(box, { label: bestMatch.toString() });
-                drawBox.draw(canvas);
-                const label = index === 0 ? 'HarshM' : 'JohnC'; 
-                const textX = box.x;
-                const textY = box.y - 15; 
-                canvas.getContext('2d').fillStyle = '#ffffff'; 
-                canvas.getContext('2d').fillText(label, textX, textY);
-            });
+                facesAiData.forEach((face, index) => {
+                    const { detection, descriptor } = face;
+                    const box = detection.box;
+                
+                    //  match any of the predefined images
+                    const bestMatch = faceMatcher.findBestMatch(descriptor);
+                
+                    if (bestMatch.label === 'unknown') {
+                        // Draw a box around the unknown face and label it as 'Unknown'
+                        const drawBox = new faceapi.draw.DrawBox(box, { label: 'Unknown' });
+                        drawBox.draw(canvas);
+                    } else {
+                        // Draw a box around the identified face with the highest probability label
+                        const drawBox = new faceapi.draw.DrawBox(box, { label: bestMatch.toString() });
+                        drawBox.draw(canvas);
+                
+                        if (!identifiedPersons.includes(bestMatch.label)) {
+                            const label = index === 0 ? name2 : name1; 
+                            const textX = box.x;
+                            const textY = box.y + 15;
+                            canvas.getContext('2d').fillStyle = 'red';
+                            canvas.getContext('2d').fillText(label, textX, textY);
+                            setIdentifiedPersons(prevState => [...prevState, bestMatch.label]);
+                        }
+                    }
+                });
         }
 
         run();
     }, []);
+
+    useEffect(() => {
+        const convertImageToText = async () => {
+            const { data: { text } } = await Tesseract.recognize(
+                groupPhoto,
+                'eng',
+                { logger: m => console.log(m) }
+            );
+            
+            const datePattern = /(\d{2}\/\d{2}\/\d{4})/;
+            const match = text.match(datePattern);
+            const extractedDate = match ? match[0] : '';
+            setDate(extractedDate);
+        };
+
+        convertImageToText();
+    }, []);
+
 
     const handleSubjectCodeChange = (e) => {
         setSubjectCode(e.target.value);
@@ -88,6 +123,7 @@ const FaceRecognitionPage = () => {
         }
     };
 
+    
     return (
         <div>
             <div style={{ position: 'relative', display: 'inline-block' }}>
@@ -101,6 +137,7 @@ const FaceRecognitionPage = () => {
                 <input type="date" id="date" value={date} onChange={handleDateChange} />
                 <button onClick={handleSubmit}>Submit</button>
                 {attendanceAdded && <p>Attendance added for HarshM and JohnC on {date} for subject code {subjectCode}</p>}
+                <p>Date recognized from image: {date}</p>
             </div>
         </div>
     );
