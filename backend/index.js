@@ -10,7 +10,14 @@ import cookieParser from "cookie-parser";
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+
+app.use(
+  cors({
+    origin: "https://attendance-frontend-psi.vercel.app/",
+    credentials: true,
+  })
+);
+
 app.use(cookieParser());
 
 const upload = multer({ dest: "uploads/" });
@@ -18,11 +25,18 @@ const upload = multer({ dest: "uploads/" });
 // app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// const db = mysql.createConnection({
+//   host: "localhost",
+//   user: "root",
+//   password: "123456",
+//   database: "DBMS12",
+// });
+
 const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "123456",
-  database: "DBMS123",
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
 });
 
 app.get("/", (req, res) => {
@@ -188,7 +202,11 @@ app.get("/students/:course", (req, res) => {
   });
 });
 
-app.listen(8800, () => {
+// app.listen(8800, () => {
+//   console.log("Connected to Backend");
+// });
+
+app.listen(process.env.PORT || 8800, () => {
   console.log("Connected to Backend");
 });
 
