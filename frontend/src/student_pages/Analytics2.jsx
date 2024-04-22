@@ -6,7 +6,7 @@ const StudentsInCourse = () => {
   const [numStudents, setNumStudents] = useState(0);
 
   const handleSubmit = () => {
-    fetch(`http://localhost:8800/students/${course}`)
+    fetch(`https://automated-attendance-api.onrender.com/students/${course}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');

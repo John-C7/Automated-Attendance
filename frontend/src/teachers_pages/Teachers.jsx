@@ -11,7 +11,7 @@ const Teachers = () => {
     useEffect(() => {
         const fetchAllTeachers = async () => {
             try {
-                const res = await axios.get("http://localhost:8800/teachers");
+                const res = await axios.get("https://automated-attendance-api.onrender.com/teachers");
                 setTeachers(res.data);
             } catch (err) {
                 console.log(err);

@@ -60,7 +60,7 @@ const Analytics = () => {
   const [attendanceData, setAttendanceData] = useState([]);
 
   const handleSubmit = (usn, subjectId) => {
-    fetch(`http://localhost:8800/attendance/${usn}/${subjectId}`)
+    fetch(`https://automated-attendance-api.onrender.com/attendance/${usn}/${subjectId}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');

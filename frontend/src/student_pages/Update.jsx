@@ -8,7 +8,7 @@ const Update = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.delete(`http://localhost:8800/students/${usn}`);
+      const response = await axios.delete(`https://automated-attendance-api.onrender.com/students/${usn}`);
       setMessage(response.data);
       setUsn("");
     } catch (error) {

@@ -18,7 +18,7 @@ const AddTeacher = () => {
   const handleClick = async e => {
     e.preventDefault();
     try{
-      await axios.post("http://localhost:8800/teachers", teacher)
+      await axios.post("https://automated-attendance-api.onrender.com/teachers", teacher)
     }catch(err){
       console.log(err)
     }

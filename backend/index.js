@@ -4,19 +4,22 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import multer from "multer";
 import fs from "fs";
+import dotenv from "dotenv";
 
+dotenv.config();
 import cookieParser from "cookie-parser";
 
 const app = express();
 
 app.use(express.json());
 
-app.use(
-  cors({
-    origin: "https://attendance-frontend-psi.vercel.app/",
-    credentials: true,
-  })
-);
+app.use(cors());
+// app.use(
+//   cors({
+//     origin: "https://attendance-frontend-psi.vercel.app",
+//     credentials: true,
+//   })
+// );
 
 app.use(cookieParser());
 
@@ -38,6 +41,13 @@ const db = mysql.createConnection({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
 });
+
+// const db = mysql.createConnection({
+//   host: "database-1.c5cwsq882teb.eu-north-1.rds.amazonaws.com",
+//   user: "admin",
+//   password: "aws123456",
+//   database: "DBMS123",
+// });
 
 app.get("/", (req, res) => {
   res.json("Hello this is from backend");

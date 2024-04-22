@@ -8,7 +8,7 @@ const Attendance = () => {
 
   const fetchAttendance = async () => {
     try {
-      const res = await axios.get(`http://localhost:8800/attendance/${newAttendance.student_usn}/${newAttendance.subject_id}`);
+      const res = await axios.get(`https://automated-attendance-api.onrender.com/attendance/${newAttendance.student_usn}/${newAttendance.subject_id}`);
       setAttendance(res.data);
     } catch (err) {
       console.error(err);
@@ -17,7 +17,7 @@ const Attendance = () => {
 
   const addAttendance = async () => {
     try {
-      await axios.post('http://localhost:8800/attendance', newAttendance);
+      await axios.post('https://automated-attendance-api.onrender.com/attendance', newAttendance);
       fetchAttendance(); 
     } catch (err) {
       console.error(err);

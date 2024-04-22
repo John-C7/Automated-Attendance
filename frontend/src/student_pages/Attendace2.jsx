@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as faceapi from 'face-api.js';
-import groupPhoto from './Group.jpg';  
+import groupPhoto from './Group1.jpg';  
 import JohnC from "./Student1.jpg";
 import HarshM from "./Student2.jpg";
 import axios from 'axios';
@@ -116,7 +116,7 @@ const FaceRecognitionPage = () => {
             const usn = subjectCode === 'your_subject_code' ? '1DT21CS049' : '1DT21CS059'; 
             const subjectId = subjectCode;
             const status = 'present'; 
-            await axios.post('http://localhost:8800/attendance', { student_usn: usn, subject_id: subjectId, date: date, status: status });
+            await axios.post('http://automated-attendance-api.onrender.com/attendance', { student_usn: usn, subject_id: subjectId, date: date, status: status });
             setAttendanceAdded(true);
         } else {
             alert('Please select a subject code and date');
